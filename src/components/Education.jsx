@@ -71,28 +71,44 @@ const Education = () => {
     //ถ้ายังไม่มีไฟล์
     if (document === "") {
       let formData = new FormData();
-      formData.append("name", gname);
-      formData.append("photo", file[0]);
-      formData.append("detail", "educations");
-      formData.append("group", "docs");
-      await axios
-        .post(`${import.meta.env.VITE_BASE_URL}/document/upload`, formData)
-        .then((res) => {
-          if (res.status === 200) {
-            updateFileEducation(res.data.path);
-          }
-        });
-    } else {
-      let formData = new FormData();
-      formData.append("photo", file[0]);
-      formData.append("path", document);
-      await axios
-        .post(`${import.meta.env.VITE_BASE_URL}/document/updatefile`, formData)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.data.path);
 
-            let newPath = res.data.path;
+      formData.append("file", file[0]);
+
+      await
+        fetch(`http://localhost/leadkku-api/file/index.php`,
+          {
+            method: 'POST',
+            body: formData
+          }
+
+        )
+          .then(response => response.json())
+          .then((res) => {
+            if (res.status === 200) {
+              updateFileEducation(res.path);
+            }
+          });
+    } else {
+
+      let formData = new FormData();
+      formData.append("file", file[0]);
+
+      //delete file old 
+      fetch(`http://localhost/leadkku-api/file/index.php?filename=${document}`, { method: 'DELETE' })
+
+      //upnew file 
+      fetch(`http://localhost/leadkku-api/file/index.php`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      )
+        .then(response => response.json())
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.path);
+
+            let newPath = res.path;
 
             updateFileEducation(newPath);
           }
@@ -103,17 +119,19 @@ const Education = () => {
   //2
   const updateFileEducation = async (path) => {
     const body = { path: path };
-    await axios
-      .put(
-        `${import.meta.env.VITE_BASE_URL}/education/updateEducationFile/${eId}`,
-        body
-      )
+
+    fetch(`http://localhost/leadkku-api/education/updatefile/${eId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(body)
+      }
+    )
       .then((res) => {
         if (res.status === 200) {
           alert("แก้ไขไฟล์ในเอกสารสำเร็จ");
         }
       });
-    getEducations();
+    await getEducations();
   };
 
   const handelUpFile = (e) => {
@@ -149,30 +167,33 @@ const Education = () => {
   //หัวข้อใหญ่
   const getTopic = async () => {
     let topics = [];
-    await axios.get(`${import.meta.env.VITE_BASE_URL}/topics/index.php`).then((res) => {
-      topics = res.data.map((data) => {
-        return { label: data.topic, value: data.id };
-      });
+    fetch(`http://localhost/leadkku-api/topics/index.php`)
+      .then(response => response.json())
+      .then((res) => {
+        topics = res.map((data) => {
+          return { label: data.topic, value: data.id };
+        });
 
-      setTopics(res.data);
-      setOption(topics);
-    });
+        setTopics(res);
+        setOption(topics);
+      });
   };
 
   const getOneEducation = async (id) => {
-    await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/topicsItem/getone.php?id=${id}`)
+    await fetch(`http://localhost/leadkku-api/topicsItem/getone.php?id=${id}`)
+      .then(response => response.json())
       .then((res) => {
-        setGetone(res.data);
+        setGetone(res);
       });
   };
 
   const getAllEducation = async () => {
-    await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php`)
-      .then((res) => {
-        setGetone(res.data);
-      });
+    await
+      fetch(`http://localhost/leadkku-api/topicsItem/index.php`)
+        .then(response => response.json())
+        .then((res) => {
+          setGetone(res);
+        });
   };
 
   //เลือกหัวข้อใหญ่ สำหรับแสดงข้อมูล
@@ -189,8 +210,12 @@ const Education = () => {
 
   const updateItem = async () => {
     const body = { topic: name };
-    await axios
-      .put(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php?id=${itemId}`, body)
+    await fetch(`http://localhost/leadkku-api/topicsItem/index.php?id=${itemId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(body)
+      }
+    )
       .then((res) => {
         if (res.status === 200) {
           Swal.fire({
@@ -209,29 +234,35 @@ const Education = () => {
   const updateGroupId = async () => {
     handleCloseGroup();
     const body = { topic: nameGroup };
-    await axios
-      .put(
-        `${import.meta.env.VITE_BASE_URL}/topics/index.php?id=${GroupId}`,
-        body
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "แก้ไขข้อมูลสำเร็จ",
-            showConfirmButton: true,
-            timer: 1500,
-          });
-          getTopic();
+    await
+      fetch(`http://localhost/leadkku-api/topics/index.php?id=${GroupId}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(body)
         }
-      });
+      )
+        .then((res) => {
+          if (res.status === 200) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "แก้ไขข้อมูลสำเร็จ",
+              showConfirmButton: true,
+              timer: 1500,
+            });
+            getTopic();
+          }
+        });
   };
 
   const addGroup = async () => {
     const body = { topic: nameGroup };
-    await axios
-      .post(`${import.meta.env.VITE_BASE_URL}/topics/index.php`, body)
+    await fetch(`http://localhost/leadkku-api/topics/index.php`,
+      {
+        method: 'POST',
+        body: JSON.stringify(body)
+      }
+    )
       .then((res) => {
         if (res.status === 200) {
           Swal.fire({
@@ -262,8 +293,12 @@ const Education = () => {
       groupName: educationTopic.label ? educationTopic.label : gname,
       name: title,
     };
-    await axios
-      .put(`${import.meta.env.VITE_BASE_URL}/education/index.php?id=${eId}`, body)
+    await fetch(`http://localhost/leadkku-api/education/index.php?id=${eId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(body)
+      }
+    )
       .then((res) => {
         if (res.status === 200) {
           alert("แก้ไขข้อมูลสำเร็จ");
@@ -274,10 +309,11 @@ const Education = () => {
   const updateEducationDetail = () => {
     detail.map((item) => {
       let body = { answer: item.answer };
-      axios.put(
-        `${import.meta.env.VITE_BASE_URL}/education/detail.php?id=${item.educationdetailId
-        }`,
-        body
+      fetch(`http://localhost/leadkku-api/education/detail.php?id=${item.educationdetailId}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(body)
+        }
       );
     });
 
@@ -297,8 +333,12 @@ const Education = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
-          .delete(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php?id=${id}`)
+
+        fetch(`http://localhost/leadkku-api/topicsItem/index.php?id=${id}`, {
+          method: 'DELETE'
+        }
+
+        )
           .then((res) => {
             if (res.status === 200) {
               Swal.fire({
@@ -328,9 +368,9 @@ const Education = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`${import.meta.env.VITE_BASE_URL}/education/detail.php?id=${id}`);
-        axios
-          .delete(`${import.meta.env.VITE_BASE_URL}/education/index.php?id=${id}`)
+
+        fetch(`http://localhost/leadkku-api/education/detail.php?id=${id}`, { method: 'DELETE' });
+        fetch(`http://localhost/leadkku-api/education/index.php?id=${id}`, { method: 'DELETE' })
           .then((res) => {
             if (res.status === 200) {
               Swal.fire({
@@ -360,8 +400,8 @@ const Education = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
-          .delete(`${import.meta.env.VITE_BASE_URL}/topics/index.php?id=${Id}`)
+
+        fetch(`http://localhost/leadkku-api/topics/index.php?id=${Id}`, { method: 'DELETE' })
           .then((res) => {
             if (res.status === 200) {
               Swal.fire({
@@ -398,8 +438,12 @@ const Education = () => {
       updateItem();
     } else {
       let body = { topic: name, topicId: educationId };
-      await axios
-        .post(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php`, body)
+      await fetch(`http://localhost/leadkku-api/topicsItem/index.php`,
+        {
+          method: 'POST',
+          body: JSON.stringify(body)
+        }
+      )
         .then((res) => {
           if (res.status === 200) {
             Swal.fire({
@@ -426,9 +470,10 @@ const Education = () => {
 
   const getEducations = async () => {
     await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/education/index.php`)
+      .get(`http://localhost/leadkku-api/education/index.php`)
+      .then(response => response.json())
       .then((res) => {
-        setData(res.data);
+        setData(res);
       });
   };
 
@@ -440,7 +485,8 @@ const Education = () => {
     setDocument(docs);
 
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/education/educationOne.php?id=${id}`)
+    fetch(`http://localhost/leadkku-api/education/educationOne.php?id=${id}`)
+      .then(response => response.json())
       .then((res) => {
         setDetail(res.data);
       });
@@ -520,7 +566,7 @@ const Education = () => {
                     </TableHead>
 
                     <TableBody>
-                      {data?.length > 0 &&  data?.map((row) => (
+                      {data?.length > 0 && data?.map((row) => (
                         <TableRow key={row.id}>
                           <TableCell component="th" scope="row">
                             {row.educationId}
@@ -841,7 +887,7 @@ const Education = () => {
               </Row>
               <Row>
                 <Form.Label className="mt-4">คำตอบทั้งหมด</Form.Label>
-                {data?.length > 0 &&   detail?.map((ans, index) => {
+                {data?.length > 0 && detail?.map((ans, index) => {
                   return (
                     <>
                       <Col

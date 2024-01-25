@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row, Container, Card, Button } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import axios from "axios";
 const EdcationDetail = (props) => {
   const { id } = props;
   const [data, setData] = useState([]);
   const getDetail = (id) => {
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/education/educationOne.php?id=${id}`)
+      .get(`http://localhost/leadkku-api/education/educationOne.php?id=${id}`)
+      .then(response => response.json())
       .then((res) => {
-        console.log(res)
-        setData(res.data);
+        setData(res);
       });
   };
 

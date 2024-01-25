@@ -18,41 +18,34 @@ const Login = () => {
       const body = {
         email: email,
         password: password,
-        systemName:"course"
+        systemName: "course"
       };
 
-      await axios
-        .post(
-          `${import.meta.env.VITE_BASE_URL}/login/index.php`,
-          body
+      await 
+        fetch(
+          `http://localhost/leadkku-api/login/index.php`,
+          {
+            method:'POST',
+            body:JSON.stringify(body)
+          }
+         
         )
+        .then(response => response.json())
         .then(res => {
-
-
-          if (res.status === 200) {
-
-
-            if (res.data[0].systemName === "course") {
-              localStorage.setItem("name", res.data[0].name);
-              localStorage.setItem("userId", res.data[0].userId);
+          if (res.length>0) {
+         
+              localStorage.setItem("name", res[0].name);
+              localStorage.setItem("userId", res[0].userId);
               localStorage.setItem("auth", "loginged");
               setIsLogin("loginged");
-              localStorage.setItem("role", res.data[0].role);
-              localStorage.setItem("profile", res.data[0].profile);
-
+              localStorage.setItem("role", res[0].role);
+              localStorage.setItem("profile", res[0].profile);
               navigae("/admin");
-
-            }
-           
-
-          }
-        }).catch(err => {
-          if (err) {
+            
+          }else{
             setErrorMsg("ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง")
           }
-
         })
-
     }
   };
 

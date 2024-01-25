@@ -15,7 +15,7 @@ const inniialNodes = [
     id: '0',
     type: 'default',
     data: { label: 'Nodes1' },
-    position: { x: -229.35923167589, y: -302.12746162569}
+    position: { x: -229.35923167589, y: -302.12746162569 }
 
   },
   {
@@ -51,15 +51,16 @@ const MindNode = () => {
   const getPlos = async () => {
     let nodelist = [];
     await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/program/index.php`)
+      .get(`http://localhost/leadkku-api/program/index.php`)
+      .then(response => response.json())
       .then((res) => {
-        console.log('res', res.data)
-        nodelist = res.data.map((item) => {
+        console.log('res', res)
+        nodelist = res.map((item) => {
           return {
             id: item.programlerningId.toString(),
             position: {
-              x: item.x ? Number( item.x ) : Math.random() * window.innerWidth,
-              y: item.y ? Number(item.y )   : Math.random() * window.innerHeight,
+              x: item.x ? Number(item.x) : Math.random() * window.innerWidth,
+              y: item.y ? Number(item.y) : Math.random() * window.innerHeight,
             },
             data: {
               label: (
@@ -75,10 +76,11 @@ const MindNode = () => {
   const getEage = async () => {
     let egelist = [];
     await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/program/detail.php`)
+      .get(`http://localhost/leadkku-api/program/detail.php`)
+      .then(response => response.json())
       .then((res) => {
         console.log('get agg', res)
-        egelist = res.data.map(ege => {
+        egelist = res.map(ege => {
 
           return {
             id: `${"e-" + ege.source.toString() + "-" + ege.target.toString()}`,
@@ -93,9 +95,12 @@ const MindNode = () => {
   const UpdatePositions = async () => {
     nodes.map((data) => {
       let body = { x: data.position.x, y: data.position.y };
-      axios.put(
-        `${import.meta.env.VITE_BASE_URL}/program/index.php?id=${data.id}`,
-        body
+      fetch(
+        `http://localhost/leadkku-api/program/index.php?id=${data.id}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(body)
+        }
       );
     });
 
@@ -106,26 +111,26 @@ const MindNode = () => {
       timer: 1500,
     });
 
-  await  getPlos();
-  await  getEage();
+    await getPlos();
+    await getEage();
   };
 
-  useEffect(()=>{
+  useEffect(() => {
 
-  },[])
+  }, [])
 
   useEffect(() => {
     getPlos();
- getEage();
+    getEage();
 
   }, []);
 
 
 
- 
+
 
   useEffect(() => {
-console.log('n',nodes)
+    console.log('n', nodes)
   }, [nodes]);
 
 

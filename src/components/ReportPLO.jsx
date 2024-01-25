@@ -21,31 +21,34 @@ const ReportPLO = () => {
   };
 
   const getData = async () => {
-    await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/program/index.php`)
+    await fetch(`http://localhost/leadkku-api/program/index.php`)
+      .then(response => response.json())
       .then((res) => {
-        setData(res.data);
+        setData(res);
       });
   };
 
   const updateProgramId = async () => {
     const body = { answer: name };
-    await axios
-      .put(
-        `${import.meta.env.VITE_BASE_URL}/program/updateProgram.php?id=${Id}`,
-        body
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "แก้ไขข้อมูลสำเร็จ",
-            showConfirmButton: true,
-            timer: 1000,
-          });
+    await
+      fetch(
+        `http://localhost/leadkku-api/program/updateProgram.php?id=${Id}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(body)
         }
-      });
+      )
+        .then((res) => {
+          if (res.status === 200) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "แก้ไขข้อมูลสำเร็จ",
+              showConfirmButton: true,
+              timer: 1000,
+            });
+          }
+        });
     await getData();
     handleClose();
   };
@@ -61,10 +64,10 @@ const ReportPLO = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
-          .delete(
-            `${import.meta.env.VITE_BASE_URL}/program/index.php?id=${id}`
-          )
+        fetch(
+          `http://localhost/leadkku-api/program/index.php?id=${id}`,
+          { method: 'DELETE' }
+        )
           .then((res) => {
             if (res.status === 200) {
               Swal.fire({
@@ -78,8 +81,8 @@ const ReportPLO = () => {
               getData();
             }
           });
-        axios.delete(
-          `${import.meta.env.VITE_BASE_URL}/program/detail.php?id=${id}`
+        fetch(`http://localhost/leadkku-api/program/detail.php?id=${id}`,
+          { method: 'DELETE' }
         );
       }
     });
@@ -108,7 +111,7 @@ const ReportPLO = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  { data?.length > 0 &&  data?.map((data) => {
+                  {data?.length > 0 && data?.map((data) => {
                     return (
                       <tr>
                         <td>{data.name}</td>

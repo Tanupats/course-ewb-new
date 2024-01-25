@@ -18,9 +18,7 @@ const Admin = () => {
     navigate("/login");
   }
 
-  const [formName, setFormName] = useState(
-    "บันทึกความสอดคล้องกับนโยบายหรือทิศทางการศึกษา"
-  );
+  const [formName, setFormName] = useState("บันทึกความสอดคล้องกับนโยบายหรือทิศทางการศึกษา");
   const [topicsMenu, settopicsMenu] = useState([]);
 
   const [optionToppics, setOptionToppics] = useState([]);
@@ -44,13 +42,14 @@ const Admin = () => {
     setSelectedValue(event.value);
     setTopicName(event.value);
   };
-  //
+
   const getSubtopics = async (id) => {
+
     let subtopis = [];
-    await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/topicsItem/getone.php?id=${id}`)
+    await fetch(`http://localhost/leadkku-api/topicsItem/getone.php?id=${id}`)
+     .then(response=>response.json())
       .then((res) => {
-        subtopis = res.data.map((data) => {
+        subtopis = res.map((data) => {
           return { label: data.topic, value: data.topic };
         });
         setOptionToppics(subtopis);
@@ -163,14 +162,16 @@ const Admin = () => {
   let docPath = "";
   const uploadFile = async () => {
     let formData = new FormData();
-
     formData.append("file", file[0]);
 
-    await axios
-      .post(`${import.meta.env.VITE_BASE_URL}/file/index.php`, formData)
+    await fetch(`http://localhost/leadkku-api/file/index.php`, {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
       .then((res) => {
         if (res.status === 200) {
-          docPath = res.data.path;
+          docPath = res.path;
         }
       });
   };
@@ -199,19 +200,22 @@ const Admin = () => {
       topicsData.map((item) => {
         let body = { name: item.title, groupName: formName, document: docPath };
         axios
-          .post(`${import.meta.env.VITE_BASE_URL}/education/index.php`, body)
+          .post(`http://localhost/leadkku-api/education/index.php`, body)
+          .then(response => response.json())
           .then((respone) => {
             //education Id
-            id = respone.data.id;
+            id = respone.id;
 
             //detail
             item.anwsers.map((data) => {
               if (data.list !== "") {
                 let body = { answer: data.list, educationId: id };
 
-                axios.post(
-                  `${import.meta.env.VITE_BASE_URL}/education/detail.php`,
-                  body
+                fetch(`http://localhost/leadkku-api/education/detail.php`,
+                  {
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                  }
                 );
               }
             });
@@ -253,8 +257,12 @@ const Admin = () => {
             document: docPath,
           };
 
-          axios
-            .post(`${import.meta.env.VITE_BASE_URL}/program/index.php`, body)
+          fetch(`http://localhost/leadkku-api/program/index.php`,
+            {
+              method: 'POST' ,
+              body: JSON.stringify(body)
+            }
+          )
             .then((respone) => {
               if (respone.status === 200) {
                 Swal.fire({
@@ -279,16 +287,25 @@ const Admin = () => {
             answer: item.list,
             document: docPath,
           };
-          axios
-            .post(`${import.meta.env.VITE_BASE_URL}/program/index.php`, body)
+
+          fetch(`http://localhost/leadkku-api/program/index.php`,
+            {
+              method: 'POST',
+              body: JSON.stringify(body)
+            })
+            .then(response => response.json())
             .then((respone) => {
-              let id = respone.data.id;
+              let id = respone.id;
 
               const body = { source: parseInt(yloValue), target: String(id) };
 
               //for connect node Ylo to clo
-              axios.post(
-                `${import.meta.env.VITE_BASE_URL}/program/detail.php`, body);
+              fetch(`http://localhost/leadkku-api/program/detail.php`,
+                {
+                  method: 'POST',
+                  body: JSON.stringify(body)
+                }
+              );
             });
         }
       });
@@ -311,17 +328,25 @@ const Admin = () => {
             answer: item.list,
             document: docPath,
           };
-          axios
-            .post(`${import.meta.env.VITE_BASE_URL}/program/index.php`, body)
+          fetch(`http://localhost/leadkku-api/program/index.php`,
+            {
+              method: 'POST',
+              body: JSON.stringify(body)
+            }
+          )
+            .then(response => response.json())
             .then((respone) => {
-              let id = respone.data.id;
+              let id = respone.id;
 
               let body = { source: parseInt(ploValue), target: String(id) };
 
               //for connect node Ylo to plo
-              axios.post(
-                `${import.meta.env.VITE_BASE_URL}/program/detail.php`,
-                body
+              fetch(
+                `http//localhost/leadkku-api/program/detail.php`,
+                {
+                  method: 'POST',
+                  body: JSON.stringify(body)
+                }
               );
             });
         }
@@ -341,35 +366,38 @@ const Admin = () => {
 
   const getPLOs = async () => {
     let plos = [];
-    await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/program/getPlo.php?name=PLOs`)
+
+    fetch(`http://localhost/leadkku-api/program/getPlo.php?name=PLOs`)
+      .then(response => response.json())
       .then((res) => {
-        console.log(res.data);
-        plos = res.data.map((item) => {
+        plos = res.map((item) => {
           return { label: item.answer, value: item.programlerningId };
         });
       });
+
     setPlos(plos);
   };
 
   const getYLOs = async () => {
     let clos = [];
-    await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/program/getPLo.php?name=YLOs`)
-      .then((res) => {
-        console.log(res.data);
-        clos = res.data.map((item) => {
-          return { label: item.answer, value: item.programlerningId };
+    await
+      fetch(`http://localhost/leadkku-api/program/getPLo.php?name=YLOs`)
+        .then(response => response.json())
+        .then((res) => {
+          clos = res.map((item) => {
+            return { label: item.answer, value: item.programlerningId };
+          });
         });
-      });
 
     setYlos(clos);
   };
 
   const getTopics = async () => {
-    await axios.get(`${import.meta.env.VITE_BASE_URL}/topics/index.php`).then((res) => {
-      settopicsMenu(res.data);
-    });
+    await fetch(`http://localhost/leadkku-api/topics/index.php`)
+      .then(response => response.json())
+      .then((res) => {
+        settopicsMenu(res);
+      });
   };
 
   const handelUploadFiles = (e) => {
@@ -384,7 +412,7 @@ const Admin = () => {
   }, []);
 
   useEffect(() => {
-    console.log('top', optionToppics)
+
   }, [optionToppics])
   useEffect(() => { }, [counter]);
 

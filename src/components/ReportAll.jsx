@@ -24,9 +24,10 @@ const ReportAll = () => {
 
   const getData = async () => {
     await axios
-      .get(`${import.meta.env.VITE_BASE_URL}/education/index.php`)
+      .get(`http://localhost/leadkku-api/education/index.php`)
+      .then(response=>response.json())
       .then((res) => {
-        setData(res.data);
+        setData(res);
       });
   };
 

@@ -7,7 +7,7 @@ const PreviewFile = (props) => {
     <>
       <DocViewer
         style={{height:'500px'}}
-        documents={[{ uri:`${import.meta.env.VITE_BASE_URL}/${path}`}]}
+        documents={[{ uri:`http://localhost/leadkku-api/${path}`}]}
         pluginRenderers={DocViewerRenderers}
       />
     </>

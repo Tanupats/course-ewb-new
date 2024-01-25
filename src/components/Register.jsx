@@ -13,24 +13,25 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-
   let path = "";
   const uploadProfile = async () => {
     let formData = new FormData();
     formData.append("file", file);
-
-    await axios.post(`${import.meta.env.VITE_BASE_URL}/file/index.php`, formData)
+    await fetch(`http://localhost/leadkku-api/file/index.php`,
+      {
+        method: 'POST',
+        body: formData
+      }
+    )
+      .then(response => response.json())
       .then((res) => {
-        path = res.data.path
+        path = res.path
       })
   }
 
-  const handelSubmit = async (e) => { 
-    
+  const handelSubmit = async (e) => {
     e.preventDefault();
-
     await uploadProfile();
-   
     const body = {
       name: name,
       email: email,
@@ -39,9 +40,12 @@ const Register = () => {
       role: "admin",
       systemName: "course"
     }
-
-    await axios
-      .post(`${import.meta.env.VITE_BASE_URL}/users/index.php`, body)
+    await fetch(`http://localhost/leadkku-api/users/index.php`,
+      {
+        method: 'POST',
+        body: JSON.stringify(body)
+      }
+    )
       .then((res) => {
         if (res.status === 200) {
           navigae("/login");
@@ -81,7 +85,7 @@ const Register = () => {
                   <Col sm={12}>
                     <Form
                       className="section-form"
-                     
+
                       enctype="multipart/form-data"
                     >
                       <h4 className="text-center"> ลงทะเบียน</h4>
@@ -128,10 +132,10 @@ const Register = () => {
                       {message ? <Alert variant="danger" className="text-center"> {message} </Alert> : <></>}
                       <br />
                       <a href="/login">หากมีบัญชีอยู่แล้ว คลิกเข้าสู่ระบบ</a>
-                      <Button 
-                     onClick={(e) => handelSubmit(e)}
-                      
-                      className=" w-100 mt-4">
+                      <Button
+                        onClick={(e) => handelSubmit(e)}
+
+                        className=" w-100 mt-4">
                         ลงทะเบียน
                       </Button>
                     </Form>
