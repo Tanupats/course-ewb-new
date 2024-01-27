@@ -1,22 +1,38 @@
 .node-item-PLOs{
-  
+   
+    padding: 10px;
     font-size: 20px;
     background-color: rgb(80, 8, 148);
+    font-weight: bold;
     color: #fff;
 }
 
 .node-item-YLOs{
-    
+ 
+    padding: 10px;
     font-size: 20px;
     background-color: rgb(8, 107, 99);
     color: #fff;
+    font-weight: bold;
 }
 
 .node-item-CLOs{
-    
+ 
+    padding: 10px;
     font-size: 20px;
     background-color: rgb(167, 6, 132);
     color: #fff;
+    font-weight: bold;
 }
+path.react-flow__edge-path {
 
- 
+    stroke-width: 5;
+  }
+  
+  path.react-flow__edge-path:hover {
+    stroke-width:7;
+  }
+
+  .react-flow__node {
+    width:300px;
+}

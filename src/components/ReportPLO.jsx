@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { Col, Row, Container, Button, Modal, Form } from "react-bootstrap";
-import axios from "axios";
 import moment from "moment/moment";
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,7 +20,7 @@ const ReportPLO = () => {
   };
 
   const getData = async () => {
-    await fetch(`http://localhost/leadkku-api/program/index.php`)
+    await fetch(`${import.meta.env.VITE_BASE_URL}/program/index.php`)
       .then(response => response.json())
       .then((res) => {
         setData(res);
@@ -32,7 +31,7 @@ const ReportPLO = () => {
     const body = { answer: name };
     await
       fetch(
-        `http://localhost/leadkku-api/program/updateProgram.php?id=${Id}`,
+        `${import.meta.env.VITE_BASE_URL}/program/updateProgram.php?id=${Id}`,
         {
           method: 'PUT',
           body: JSON.stringify(body)
@@ -65,7 +64,7 @@ const ReportPLO = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         fetch(
-          `http://localhost/leadkku-api/program/index.php?id=${id}`,
+          `${import.meta.env.VITE_BASE_URL}/program/index.php?id=${id}`,
           { method: 'DELETE' }
         )
           .then((res) => {
@@ -81,7 +80,7 @@ const ReportPLO = () => {
               getData();
             }
           });
-        fetch(`http://localhost/leadkku-api/program/detail.php?id=${id}`,
+        fetch(`${import.meta.env.VITE_BASE_URL}/program/detail.php?id=${id}`,
           { method: 'DELETE' }
         );
       }

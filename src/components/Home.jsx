@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <Container>
+    <Container fluid>
       <Row className="mt-4 text-center">
 
         <Col className="mt-4 mb-4" >
-          <h1 className="mb-4" style={{ color: '#8f56b8' }}>ยินดีต้อนรับเข้าสู่ ระบบจัดทำหลักสูตร</h1>
+          <h3 className="mb-4" style={{ color: '#8f56b8',marginBottom:'40px' }}>ยินดีต้อนรับ ระบบจัดทำหลักสูตร</h3>
 
           <div className="cover" >
-            <Image style={{ width: '100%' }} src="Nkc_86011713544421.jpg" />
+            <Image style={{ width: '100%' }} src="homepage.jpg" />
           </div>
           {
 

@@ -23,8 +23,7 @@ const ReportAll = () => {
   const handelClose = () => setShow(false);
 
   const getData = async () => {
-    await axios
-      .get(`http://localhost/leadkku-api/education/index.php`)
+ await  fetch(`${import.meta.env.VITE_BASE_URL}/education/index.php`)
       .then(response=>response.json())
       .then((res) => {
         setData(res);
@@ -71,7 +70,7 @@ const ReportAll = () => {
                                 variant="success"
                                 onClick={() => handelShow(data.document)}
                               >
-                                <PreviewIcon /> ดูไฟล์
+                                <PreviewIcon />เอกสาร
                               </Button>
                             </>
                           )}
@@ -89,7 +88,7 @@ const ReportAll = () => {
         </Row>
         <Modal size="md" show={show} onHide={handelClose}>
           <Modal.Header>
-            <Modal.Title>PreviewFile</Modal.Title>
+            <Modal.Title as="h5">ไฟล์เอกสาร</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <PreviewFile path={src} />

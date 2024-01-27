@@ -21,19 +21,19 @@ const Login = () => {
         systemName: "course"
       };
 
-      await 
+      await
         fetch(
-          `http://localhost/leadkku-api/login/index.php`,
+          `${import.meta.env.VITE_BASE_URL}/login/index.php`,
           {
-            method:'POST',
-            body:JSON.stringify(body)
+            method: 'POST',
+            body: JSON.stringify(body)
           }
-         
+
         )
-        .then(response => response.json())
-        .then(res => {
-          if (res.length>0) {
-         
+          .then(response => response.json())
+          .then(res => {
+            if (res.length > 0) {
+
               localStorage.setItem("name", res[0].name);
               localStorage.setItem("userId", res[0].userId);
               localStorage.setItem("auth", "loginged");
@@ -41,11 +41,11 @@ const Login = () => {
               localStorage.setItem("role", res[0].role);
               localStorage.setItem("profile", res[0].profile);
               navigae("/admin");
-            
-          }else{
-            setErrorMsg("ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง")
-          }
-        })
+
+            } else {
+              setErrorMsg("ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง")
+            }
+          })
     }
   };
 

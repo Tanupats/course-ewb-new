@@ -68,14 +68,15 @@ const Education = () => {
 
   //1
   const uploadFile = async () => {
-    //ถ้ายังไม่มีไฟล์
+
+    //ถ้ายังไม่มีไฟล์อัพไฟล์ใหม่ แล้วอัพเดตข้อมูล
     if (document === "") {
       let formData = new FormData();
 
       formData.append("file", file[0]);
 
       await
-        fetch(`http://localhost/leadkku-api/file/index.php`,
+        fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php`,
           {
             method: 'POST',
             body: formData
@@ -84,7 +85,7 @@ const Education = () => {
         )
           .then(response => response.json())
           .then((res) => {
-            if (res.status === 200) {
+            if (res) {
               updateFileEducation(res.path);
             }
           });
@@ -94,10 +95,10 @@ const Education = () => {
       formData.append("file", file[0]);
 
       //delete file old 
-      fetch(`http://localhost/leadkku-api/file/index.php?filename=${document}`, { method: 'DELETE' })
+      fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php?filename=${document}`,{ method: 'DELETE' })
 
       //upnew file 
-      fetch(`http://localhost/leadkku-api/file/index.php`,
+      fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php`,
         {
           method: 'POST',
           body: formData
@@ -105,22 +106,18 @@ const Education = () => {
       )
         .then(response => response.json())
         .then((res) => {
-          if (res.status === 200) {
-            console.log(res.path);
-
+          if (res) {
             let newPath = res.path;
-
             updateFileEducation(newPath);
           }
         });
     }
   };
 
-  //2
+
   const updateFileEducation = async (path) => {
     const body = { path: path };
-
-    fetch(`http://localhost/leadkku-api/education/updatefile/${eId}`,
+    fetch(`${import.meta.env.VITE_BASE_URL}/education/updatefile.php?id=${eId}`,
       {
         method: 'PUT',
         body: JSON.stringify(body)
@@ -131,18 +128,21 @@ const Education = () => {
           alert("แก้ไขไฟล์ในเอกสารสำเร็จ");
         }
       });
-    await getEducations();
+      await getEducations();
   };
+
 
   const handelUpFile = (e) => {
     setFile([e.target.files[0]]);
   };
+
 
   const handleClose = () => {
     setShow(false);
     setItemID("");
     setName("");
   };
+
 
   const handleCloseGroup = () => {
     setShowGroup(false);
@@ -167,7 +167,7 @@ const Education = () => {
   //หัวข้อใหญ่
   const getTopic = async () => {
     let topics = [];
-    fetch(`http://localhost/leadkku-api/topics/index.php`)
+    fetch(`${import.meta.env.VITE_BASE_URL}/topics/index.php`)
       .then(response => response.json())
       .then((res) => {
         topics = res.map((data) => {
@@ -180,7 +180,7 @@ const Education = () => {
   };
 
   const getOneEducation = async (id) => {
-    await fetch(`http://localhost/leadkku-api/topicsItem/getone.php?id=${id}`)
+    await fetch(`${import.meta.env.VITE_BASE_URL}/topicsItem/getone.php?id=${id}`)
       .then(response => response.json())
       .then((res) => {
         setGetone(res);
@@ -189,7 +189,7 @@ const Education = () => {
 
   const getAllEducation = async () => {
     await
-      fetch(`http://localhost/leadkku-api/topicsItem/index.php`)
+      fetch(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php`)
         .then(response => response.json())
         .then((res) => {
           setGetone(res);
@@ -210,7 +210,7 @@ const Education = () => {
 
   const updateItem = async () => {
     const body = { topic: name };
-    await fetch(`http://localhost/leadkku-api/topicsItem/index.php?id=${itemId}`,
+    await fetch(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php?id=${itemId}`,
       {
         method: 'PUT',
         body: JSON.stringify(body)
@@ -235,7 +235,7 @@ const Education = () => {
     handleCloseGroup();
     const body = { topic: nameGroup };
     await
-      fetch(`http://localhost/leadkku-api/topics/index.php?id=${GroupId}`,
+      fetch(`${import.meta.env.VITE_BASE_URL}/topics/index.php?id=${GroupId}`,
         {
           method: 'PUT',
           body: JSON.stringify(body)
@@ -257,7 +257,7 @@ const Education = () => {
 
   const addGroup = async () => {
     const body = { topic: nameGroup };
-    await fetch(`http://localhost/leadkku-api/topics/index.php`,
+    await fetch(`${import.meta.env.VITE_BASE_URL}/topics/index.php`,
       {
         method: 'POST',
         body: JSON.stringify(body)
@@ -293,7 +293,8 @@ const Education = () => {
       groupName: educationTopic.label ? educationTopic.label : gname,
       name: title,
     };
-    await fetch(`http://localhost/leadkku-api/education/index.php?id=${eId}`,
+
+    await fetch(`${import.meta.env.VITE_BASE_URL}/education/index.php?id=${eId}`,
       {
         method: 'PUT',
         body: JSON.stringify(body)
@@ -309,7 +310,7 @@ const Education = () => {
   const updateEducationDetail = () => {
     detail.map((item) => {
       let body = { answer: item.answer };
-      fetch(`http://localhost/leadkku-api/education/detail.php?id=${item.educationdetailId}`,
+      fetch(`${import.meta.env.VITE_BASE_URL}/education/detail.php?id=${item.educationdetailId}`,
         {
           method: 'PUT',
           body: JSON.stringify(body)
@@ -334,7 +335,7 @@ const Education = () => {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        fetch(`http://localhost/leadkku-api/topicsItem/index.php?id=${id}`, {
+        fetch(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php?id=${id}`, {
           method: 'DELETE'
         }
 
@@ -369,8 +370,8 @@ const Education = () => {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        fetch(`http://localhost/leadkku-api/education/detail.php?id=${id}`, { method: 'DELETE' });
-        fetch(`http://localhost/leadkku-api/education/index.php?id=${id}`, { method: 'DELETE' })
+        fetch(`${import.meta.env.VITE_BASE_URL}/education/detail.php?id=${id}`, { method: 'DELETE' });
+        fetch(`${import.meta.env.VITE_BASE_URL}/education/index.php?id=${id}`, { method: 'DELETE' })
           .then((res) => {
             if (res.status === 200) {
               Swal.fire({
@@ -401,7 +402,7 @@ const Education = () => {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        fetch(`http://localhost/leadkku-api/topics/index.php?id=${Id}`, { method: 'DELETE' })
+        fetch(`${import.meta.env.VITE_BASE_URL}/topics/index.php?id=${Id}`, { method: 'DELETE' })
           .then((res) => {
             if (res.status === 200) {
               Swal.fire({
@@ -438,7 +439,7 @@ const Education = () => {
       updateItem();
     } else {
       let body = { topic: name, topicId: educationId };
-      await fetch(`http://localhost/leadkku-api/topicsItem/index.php`,
+      await fetch(`${import.meta.env.VITE_BASE_URL}/topicsItem/index.php`,
         {
           method: 'POST',
           body: JSON.stringify(body)
@@ -469,12 +470,12 @@ const Education = () => {
   };
 
   const getEducations = async () => {
-    await axios
-      .get(`http://localhost/leadkku-api/education/index.php`)
-      .then(response => response.json())
-      .then((res) => {
-        setData(res);
-      });
+    await
+      fetch(`${import.meta.env.VITE_BASE_URL}/education/index.php`)
+        .then(response => response.json())
+        .then((res) => {
+          setData(res);
+        });
   };
 
   const getDetail = (id, title, groupnam, docs) => {
@@ -485,10 +486,10 @@ const Education = () => {
     setDocument(docs);
 
     axios
-    fetch(`http://localhost/leadkku-api/education/educationOne.php?id=${id}`)
+    fetch(`${import.meta.env.VITE_BASE_URL}/education/educationOne.php?id=${id}`)
       .then(response => response.json())
       .then((res) => {
-        setDetail(res.data);
+        setDetail(res);
       });
 
     setShowDetail(true);
@@ -876,7 +877,7 @@ const Education = () => {
                 </Col>
                 <Col sm={12}>
                   <Form.Group className="mt-4">
-                    <Form.Label> แก้ไขไฟล์ </Form.Label>
+                    <Form.Label> อัพโหลดไฟล์ใหม่ </Form.Label>
                     <Form.Control
                       type="file"
                       name="photo"

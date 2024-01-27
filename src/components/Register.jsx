@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Col, Row, Form, Button, Image, Card, Alert } from "react-bootstrap";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const Register = () => {
   const navigae = useNavigate();
@@ -17,7 +16,7 @@ const Register = () => {
   const uploadProfile = async () => {
     let formData = new FormData();
     formData.append("file", file);
-    await fetch(`http://localhost/leadkku-api/file/index.php`,
+    await fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php`,
       {
         method: 'POST',
         body: formData
@@ -40,7 +39,7 @@ const Register = () => {
       role: "admin",
       systemName: "course"
     }
-    await fetch(`http://localhost/leadkku-api/users/index.php`,
+    await fetch(`${import.meta.env.VITE_BASE_URL}/users/index.php`,
       {
         method: 'POST',
         body: JSON.stringify(body)

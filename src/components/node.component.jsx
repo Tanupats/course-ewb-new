@@ -6,7 +6,6 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { Row, Col, Button } from "react-bootstrap";
 import "./node.css";
-import axios from "axios";
 import SchemaIcon from "@mui/icons-material/Schema";
 import Swal from "sweetalert2";
 
@@ -48,13 +47,15 @@ const MindNode = () => {
     ReactFlowInstance.fitView();
   };
 
+  const initialPosition = { x: 0, y: 0 }; // ตำแหน่งเริ่มต้นที่ต้องการ
+  const initialZoom = 1; // ระดับซูมเริ่มต้นที่ต้องการ
+
   const getPlos = async () => {
     let nodelist = [];
-    await axios
-      .get(`http://localhost/leadkku-api/program/index.php`)
+    await fetch(`${import.meta.env.VITE_BASE_URL}/program/index.php`)
       .then(response => response.json())
       .then((res) => {
-        console.log('res', res)
+        
         nodelist = res.map((item) => {
           return {
             id: item.programlerningId.toString(),
@@ -62,6 +63,7 @@ const MindNode = () => {
               x: item.x ? Number(item.x) : Math.random() * window.innerWidth,
               y: item.y ? Number(item.y) : Math.random() * window.innerHeight,
             },
+           
             data: {
               label: (
                 <div className={`node-item-${item.name}`}> {item.answer}</div>
@@ -75,11 +77,10 @@ const MindNode = () => {
   };
   const getEage = async () => {
     let egelist = [];
-    await axios
-      .get(`http://localhost/leadkku-api/program/detail.php`)
+    await fetch(`${import.meta.env.VITE_BASE_URL}/program/detail.php`)
       .then(response => response.json())
       .then((res) => {
-        console.log('get agg', res)
+       
         egelist = res.map(ege => {
 
           return {
@@ -96,7 +97,7 @@ const MindNode = () => {
     nodes.map((data) => {
       let body = { x: data.position.x, y: data.position.y };
       fetch(
-        `http://localhost/leadkku-api/program/index.php?id=${data.id}`,
+        `${import.meta.env.VITE_BASE_URL}/program/index.php?id=${data.id}`,
         {
           method: 'PUT',
           body: JSON.stringify(body)
@@ -125,13 +126,12 @@ const MindNode = () => {
 
   }, []);
 
-
-
-
-
   useEffect(() => {
-    console.log('n', nodes)
+      
   }, [nodes]);
+  useEffect(() => {
+  
+  }, [edges]);
 
 
 
@@ -149,7 +149,10 @@ const MindNode = () => {
           </Button>
         </Col>
       </Row>
+
       <ReactFlow
+      className="mt-4"
+     zoom={-0.6}
         style={{ width: "100%", height: "100vh" }}
         onLoad={onLoad}
         nodes={nodes}

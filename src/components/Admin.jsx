@@ -3,7 +3,6 @@ import { Nav } from "react-bootstrap";
 import { Container, Row, Col, Card, Form, Image, Alert } from "react-bootstrap";
 import "./Admin.css";
 import { Button } from "react-bootstrap";
-import axios from "axios";
 import Swal from "sweetalert2";
 import Select from "react-select";
 import { Link, useNavigate } from "react-router-dom";
@@ -46,8 +45,8 @@ const Admin = () => {
   const getSubtopics = async (id) => {
 
     let subtopis = [];
-    await fetch(`http://localhost/leadkku-api/topicsItem/getone.php?id=${id}`)
-     .then(response=>response.json())
+    await fetch(`${import.meta.env.VITE_BASE_URL}/topicsItem/getone.php?id=${id}`)
+      .then(response => response.json())
       .then((res) => {
         subtopis = res.map((data) => {
           return { label: data.topic, value: data.topic };
@@ -164,7 +163,7 @@ const Admin = () => {
     let formData = new FormData();
     formData.append("file", file[0]);
 
-    await fetch(`http://localhost/leadkku-api/file/index.php`, {
+    await fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php`, {
       method: 'POST',
       body: formData
     })
@@ -194,24 +193,31 @@ const Admin = () => {
       await uploadFile();
     }
 
-    let id = "";
+   
     if (topicsData.length > 0) {
       //post toppics
       topicsData.map((item) => {
         let body = { name: item.title, groupName: formName, document: docPath };
-        axios
-          .post(`http://localhost/leadkku-api/education/index.php`, body)
+
+        fetch(`${import.meta.env.VITE_BASE_URL}/education/index.php`,
+          {
+            method: 'POST',
+            body: JSON.stringify(body)
+          }
+        )
           .then(response => response.json())
           .then((respone) => {
-            //education Id
-            id = respone.id;
+
+            //education from response Id
+             let  id = respone.id;
 
             //detail
             item.anwsers.map((data) => {
               if (data.list !== "") {
+                
                 let body = { answer: data.list, educationId: id };
 
-                fetch(`http://localhost/leadkku-api/education/detail.php`,
+                fetch(`${import.meta.env.VITE_BASE_URL}/education/detail.php`,
                   {
                     method: 'POST',
                     body: JSON.stringify(body)
@@ -257,9 +263,9 @@ const Admin = () => {
             document: docPath,
           };
 
-          fetch(`http://localhost/leadkku-api/program/index.php`,
+          fetch(`${import.meta.env.VITE_BASE_URL}/program/index.php`,
             {
-              method: 'POST' ,
+              method: 'POST',
               body: JSON.stringify(body)
             }
           )
@@ -288,7 +294,7 @@ const Admin = () => {
             document: docPath,
           };
 
-          fetch(`http://localhost/leadkku-api/program/index.php`,
+          fetch(`${import.meta.env.VITE_BASE_URL}/program/index.php`,
             {
               method: 'POST',
               body: JSON.stringify(body)
@@ -300,7 +306,7 @@ const Admin = () => {
               const body = { source: parseInt(yloValue), target: String(id) };
 
               //for connect node Ylo to clo
-              fetch(`http://localhost/leadkku-api/program/detail.php`,
+              fetch(`${import.meta.env.VITE_BASE_URL}/program/detail.php`,
                 {
                   method: 'POST',
                   body: JSON.stringify(body)
@@ -328,7 +334,7 @@ const Admin = () => {
             answer: item.list,
             document: docPath,
           };
-          fetch(`http://localhost/leadkku-api/program/index.php`,
+          fetch(`${import.meta.env.VITE_BASE_URL}/program/index.php`,
             {
               method: 'POST',
               body: JSON.stringify(body)
@@ -342,7 +348,7 @@ const Admin = () => {
 
               //for connect node Ylo to plo
               fetch(
-                `http//localhost/leadkku-api/program/detail.php`,
+                `${import.meta.env.VITE_BASE_URL}/program/detail.php`,
                 {
                   method: 'POST',
                   body: JSON.stringify(body)
@@ -367,7 +373,7 @@ const Admin = () => {
   const getPLOs = async () => {
     let plos = [];
 
-    fetch(`http://localhost/leadkku-api/program/getPlo.php?name=PLOs`)
+    fetch(`${import.meta.env.VITE_BASE_URL}/program/getPlo.php?name=PLOs`)
       .then(response => response.json())
       .then((res) => {
         plos = res.map((item) => {
@@ -381,7 +387,7 @@ const Admin = () => {
   const getYLOs = async () => {
     let clos = [];
     await
-      fetch(`http://localhost/leadkku-api/program/getPLo.php?name=YLOs`)
+      fetch(`${import.meta.env.VITE_BASE_URL}/program/getPLo.php?name=YLOs`)
         .then(response => response.json())
         .then((res) => {
           clos = res.map((item) => {
@@ -393,7 +399,7 @@ const Admin = () => {
   };
 
   const getTopics = async () => {
-    await fetch(`http://localhost/leadkku-api/topics/index.php`)
+    await fetch(`${import.meta.env.VITE_BASE_URL}/topics/index.php`)
       .then(response => response.json())
       .then((res) => {
         settopicsMenu(res);

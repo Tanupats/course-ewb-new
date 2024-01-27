@@ -9,6 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "homepage": "https://course.alllaedkku.com/",
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.14.0",
     "@emotion/react": "^11.11.1",

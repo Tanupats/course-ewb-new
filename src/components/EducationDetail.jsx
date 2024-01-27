@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import axios from "axios";
 const EdcationDetail = (props) => {
   const { id } = props;
   const [data, setData] = useState([]);
   const getDetail = (id) => {
-    axios
-      .get(`http://localhost/leadkku-api/education/educationOne.php?id=${id}`)
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/education/educationOne.php?id=${id}`)
       .then(response => response.json())
-      .then((res) => {
+      .then((res) => {     
         setData(res);
       });
   };
