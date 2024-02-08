@@ -1,26 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Container, Card, Button, Modal } from "react-bootstrap";
-import axios from "axios";
+import { Col, Row, Container, Card, Button } from "react-bootstrap";
 import EdcationDetail from "./EducationDetail";
 import "../index.css";
-import PreviewFile from "./PreviewFile";
 import PreviewIcon from "@mui/icons-material/Preview";
+import { useNavigate } from "react-router-dom";
 const ReportAll = () => {
-
+  const navigate = useNavigate()
   const [show, setShow] = useState(false);
   const [data, setData] = useState([{
     educationdetailId: "58",
     answer: "คำตอบใหม่eee",
     educationId: 27
   }]);
-  const [src, setSrc] = useState("");
 
-  const handelShow = (path) => {
-    setSrc(path);
-    setShow(true);
-  };
+  
 
-  const handelClose = () => setShow(false);
+  function downloadURI(uri, name) {
+    if (uri !== "") {
+      var link = document.createElement("a");
+      link.download = name;
+      link.href = `${import.meta.env.VITE_BASE_URL}/${uri}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+
+  
+
 
   const getData = async () => {
  await  fetch(`${import.meta.env.VITE_BASE_URL}/education/index.php`)
@@ -68,9 +76,9 @@ const ReportAll = () => {
                               <Button
                                 className="mt-4"
                                 variant="success"
-                                onClick={() => handelShow(data.document)}
+                                onClick={()=> downloadURI(data.document,data.name)}
                               >
-                                <PreviewIcon />เอกสาร
+                                <PreviewIcon />โหลดเอกสาร
                               </Button>
                             </>
                           )}
@@ -86,19 +94,7 @@ const ReportAll = () => {
             </Row>
           </Col>
         </Row>
-        <Modal size="md" show={show} onHide={handelClose}>
-          <Modal.Header>
-            <Modal.Title as="h5">ไฟล์เอกสาร</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <PreviewFile path={src} />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="danger" onClick={handelClose}>
-              ปิด
-            </Button>
-          </Modal.Footer>
-        </Modal>
+      
       </Container>
     </>
   );

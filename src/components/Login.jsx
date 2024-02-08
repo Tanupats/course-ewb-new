@@ -22,24 +22,21 @@ const Login = () => {
       };
 
       await
-        fetch(
+       axios.post(
           `${import.meta.env.VITE_BASE_URL}/login/index.php`,
-          {
-            method: 'POST',
-            body: JSON.stringify(body)
-          }
+        body
 
         )
-          .then(response => response.json())
+        
           .then(res => {
-            if (res.length > 0) {
+            if (res.data.length > 0) {
 
-              localStorage.setItem("name", res[0].name);
-              localStorage.setItem("userId", res[0].userId);
+              localStorage.setItem("name", res.data[0].name);
+              localStorage.setItem("userId", res.data[0].userId);
               localStorage.setItem("auth", "loginged");
               setIsLogin("loginged");
-              localStorage.setItem("role", res[0].role);
-              localStorage.setItem("profile", res[0].profile);
+              localStorage.setItem("role", res.data[0].role);
+              localStorage.setItem("profile", res.data[0].profile);
               navigae("/admin");
 
             } else {

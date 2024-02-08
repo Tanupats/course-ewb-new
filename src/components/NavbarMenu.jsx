@@ -21,6 +21,7 @@ const NavbarMenu = () => {
 
   const Logout = () => {
     setIsLogin("nologin");
+    localStorage.setItem("auth","nologin")
     localStorage.setItem("name", "");
   };
 

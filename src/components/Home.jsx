@@ -11,14 +11,15 @@ const Home = () => {
           <h3 className="mb-4" style={{ color: '#8f56b8',marginBottom:'40px' }}>ยินดีต้อนรับ ระบบจัดทำหลักสูตร</h3>
 
           <div className="cover" >
-            <Image style={{ width: '100%' }} src="homepage.jpg" />
+            <Image style={{ width: '100%' }} src="home.PNG" />
           </div>
           {
 
-            localStorage.getItem("name") === "" || localStorage.getItem("name") === null && (
+            localStorage.getItem("auth") === "nologin" && (
               <Button style={{ width: '300px', marginTop: '60px' }} onClick={() => { navigate('/login') }}>เข้าสู่ระบบ</Button>
             )
           }
+
 
 
         </Col>

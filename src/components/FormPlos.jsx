@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Card, Form, Button,Alert } from "react-bootstrap";
+import { Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Select from "react-select";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,7 +7,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 const FormPlos = (props) => {
     const { topicsData, ylos, plos } = props;
-    
+
     return (
         <>
             <Form >
@@ -67,7 +67,7 @@ const FormPlos = (props) => {
                                                 {data.title === "CLOs" && (
                                                     <Form.Group className="mt-4">
                                                         <Form.Label>
-                                                            เลือก YLOs 
+                                                            เลือก YLOs
                                                         </Form.Label>
                                                         <Select
                                                             options={ylos}
@@ -79,7 +79,7 @@ const FormPlos = (props) => {
                                                 {data.title === "YLOs" && (
                                                     <Form.Group className="mt-4">
                                                         <Form.Label>
-                                                            เลือก PLOs 
+                                                            เลือก PLOs
                                                         </Form.Label>
                                                         <Select
                                                             options={plos}
@@ -98,7 +98,7 @@ const FormPlos = (props) => {
                                                             + เพิ่มช่องคำตอบ
                                                         </Button>
                                                     </Col>
-                                                   
+
                                                 </Row>
 
 
@@ -111,7 +111,7 @@ const FormPlos = (props) => {
                                                 {data?.anwsers?.map((item, index) => {
                                                     return (
                                                         <>
-                                                            <Col sm={5}>
+                                                            <Col sm={5} xs={8}>
                                                                 <Form.Group>
                                                                     <Form.Label>
                                                                         {" "}
@@ -134,14 +134,14 @@ const FormPlos = (props) => {
                                                                 </Form.Group>
 
                                                             </Col>
-                                                            <Col sm={1}>
+                                                            <Col sm={1} xs={4}>
                                                                 <div
                                                                     style={{ marginTop: '38px' }}
                                                                     onClick={() =>
                                                                         props.deleteAnswerFil(indexp, item.Id)
                                                                     }
                                                                 >
-                                                                    <DeleteIcon style={{color:'red'}} />
+                                                                    <DeleteIcon style={{ color: 'red' }} />
                                                                 </div>
                                                             </Col>
                                                         </>
@@ -159,26 +159,26 @@ const FormPlos = (props) => {
                 <Row className="mt-4 ">
 
                     <Col sm={12} >  {
-                                topicsData.length === 0 && (
-                                    <Alert>
-                                 บันทึกข้อมูลเรียบร้อย
+                        topicsData.length === 0 && (
+                            <Alert>
+                                บันทึกข้อมูลเรียบร้อย
                             </Alert>
-                                )
-                        
+                        )
+
                     }
-                            
+
                     </Col>
-                    <Col sm={6}>
+                    <Col md={6} xs={6}>
                         <Button
-                         
-                            variant="success w-50"
+
+                            variant="success w-100"
                             onClick={() => props.postDataPlo()}
                         >
-                         <SaveIcon />   บันทึกข้อมูล
+                            <SaveIcon />   บันทึก
                         </Button>
                     </Col>
-                    <Col sm={6}>
-                 <Button    style={{float:'right'}} variant="danger w-50"> <CancelIcon />  ยกเลิก</Button>
+                    <Col md={6} xs={6}>
+                        <Button style={{ float: 'right' }} variant="danger w-100"> <CancelIcon />  ยกเลิก</Button>
                     </Col>
                 </Row>
             </Form>

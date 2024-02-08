@@ -1,11 +1,9 @@
 .sidebar {
-    padding: 48px 0 0;
+   
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 #sidebar-wrapper{
-    min-height: 100vh !important;
-  
-    margin-left: -1rem;
+    min-height: auto !important;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
     -o-transition: margin .25s ease-out;
@@ -13,23 +11,21 @@
     background-color: #fff;
 }
 #sidebar-wrapper .sidebar-heading {
-    padding: 0.875rem 1.25rem;
+    
     font-size: 1.2rem;
 }
 
-.btn-cancel{
+.btn-cancel{ 
     float: right;
 }
 #page-content-wrapper {
-
-
     background-color: #fff  ;
 }
 
 .nav-item{
     text-decoration: none;
     font-size: 18px;
-    background-color: #B57DDE;
+    background-color: #9f66c7;
 }
 .nav-item :hover{
     font-size: 18px;
@@ -38,4 +34,11 @@
 }
 a nav-item{
     color: #fff;
+}
+.profile{
+    margin-top: 30px;
+    width: 100%;
+}
+.nav{
+    width: 100%;
 }

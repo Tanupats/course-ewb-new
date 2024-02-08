@@ -11,6 +11,7 @@ import FormPlos from "./FormPlos";
 import ClearIcon from "@mui/icons-material/Clear";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import axios from "axios";
 const Admin = () => {
   const navigate = useNavigate();
   if (localStorage.getItem("name") === "") {
@@ -158,19 +159,19 @@ const Admin = () => {
     }
   };
 
-  let docPath = "";
+ let docPath ="";
   const uploadFile = async () => {
     let formData = new FormData();
     formData.append("file", file[0]);
 
-    await fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php`, {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => response.json())
+    await axios.post(`${import.meta.env.VITE_BASE_URL}/file/index.php`,
+
+      formData
+    )
       .then((res) => {
         if (res.status === 200) {
-          docPath = res.path;
+
+          docPath = res.data.path;
         }
       });
   };
@@ -193,7 +194,7 @@ const Admin = () => {
       await uploadFile();
     }
 
-   
+
     if (topicsData.length > 0) {
       //post toppics
       topicsData.map((item) => {
@@ -209,12 +210,12 @@ const Admin = () => {
           .then((respone) => {
 
             //education from response Id
-             let  id = respone.id;
+            let id = respone.id;
 
             //detail
             item.anwsers.map((data) => {
               if (data.list !== "") {
-                
+
                 let body = { answer: data.list, educationId: id };
 
                 fetch(`${import.meta.env.VITE_BASE_URL}/education/detail.php`,
@@ -373,27 +374,27 @@ const Admin = () => {
   const getPLOs = async () => {
     let plos = [];
 
-    fetch(`${import.meta.env.VITE_BASE_URL}/program/getPlo.php?name=PLOs`)
-      .then(response => response.json())
+    await axios.get(`${import.meta.env.VITE_BASE_URL}/program/getPlo.php?name=PLOs`)
+
       .then((res) => {
-        plos = res.map((item) => {
+        plos = res.data.map((item) => {
           return { label: item.answer, value: item.programlerningId };
         });
       });
-
+    console.log(plos)
     setPlos(plos);
   };
 
   const getYLOs = async () => {
     let clos = [];
-    await
-      fetch(`${import.meta.env.VITE_BASE_URL}/program/getPLo.php?name=YLOs`)
-        .then(response => response.json())
-        .then((res) => {
-          clos = res.map((item) => {
-            return { label: item.answer, value: item.programlerningId };
-          });
+
+    await axios.get(`${import.meta.env.VITE_BASE_URL}/program/getPlo.php?name=YLOs`)
+
+      .then((res) => {
+        clos = res.data.map((item) => {
+          return { label: item.answer, value: item.programlerningId };
         });
+      });
 
     setYlos(clos);
   };
@@ -428,7 +429,7 @@ const Admin = () => {
         <Row>
           <Col sm={3} id="sidebar-wrapper">
             <Nav className="d-md-block  sidebar">
-              <div className="text-center mb-4">
+              <div className="profile text-center  mb-4">
                 <Image
                   style={{
                     width: "60px",
@@ -440,7 +441,7 @@ const Admin = () => {
                   src={`${import.meta.env.VITE_BASE_URL}/${localStorage.getItem("profile")}`}
                 />
 
-                <h5> {localStorage.getItem("name")} </h5>
+                <h6> ผู้ใช้ : {localStorage.getItem("name")} </h6>
               </div>
 
               {topicsMenu.map((data) => {
@@ -473,14 +474,14 @@ const Admin = () => {
           <Col sm={9} id="page-content-wrapper ">
             <Card className="mt-4 mb-4">
               <Card.Body>
-                <Card.Title className="text-center mt-4 mb-4">
+                <Card.Title className="text-center mt-2 mb-2">
                   {formName}
                 </Card.Title>
 
                 {formName === "บันทึกส่วนประกอบของหลักสูตร" && (
                   <>
                     <Col sm={4} className="mb-4">
-                      <Form>
+                      <Form className="mt-3">
                         <Form.Label>แนบไฟล์เพิ่มเติม</Form.Label>
                         <Form.Control
                           type="file"
@@ -511,7 +512,7 @@ const Admin = () => {
                   <Form>
                     <Row>
                       <Col sm={4}>
-                        <Form.Group>
+                        <Form.Group className="mt-2">
                           <Form.Label>
                             เลือกหัวข้อสำหรับบันทึกข้อมูล{" "}
                           </Form.Label>
@@ -523,7 +524,7 @@ const Admin = () => {
                         </Form.Group>
                       </Col>
                       <Col sm={4}>
-                        <Form.Group>
+                        <Form.Group className="mt-2">
                           <Form.Label>กำหนดเอง </Form.Label>
                           <Form.Control
                             type="text"
@@ -535,14 +536,14 @@ const Admin = () => {
                       </Col>
 
                       <Col>
-                        <Form.Group style={{ marginTop: "29px" }}>
+                        <Form.Group style={{ marginTop: "45px" }}>
                           <Button onClick={() => addTopicData()}>
                             + เพิ่มหัวข้อ
                           </Button>
                         </Form.Group>
                       </Col>
                       <Col sm={4} className="mb-4">
-                        <Form>
+                        <Form className="mt-3">
                           <Form.Label>แนบไฟล์เพิ่มเติม</Form.Label>
                           <Form.Control
                             type="file"
@@ -592,7 +593,7 @@ const Admin = () => {
                                       {data.anwsers.map((item, index) => {
                                         return (
                                           <>
-                                            <Col sm={5} className="d-flex">
+                                            <Col sm={5}  xs={8} className="d-flex">
                                               <Form.Control
                                                 required
                                                 type="text"
@@ -608,7 +609,7 @@ const Admin = () => {
                                                 }
                                               />
                                             </Col>
-                                            <Col sm={1}>
+                                            <Col sm={1} xs={4}>
                                               <div
                                                 style={{ marginTop: "12px" }}
                                                 onClick={() =>
@@ -643,18 +644,18 @@ const Admin = () => {
                           </Alert>
                         )}
                       </Col>
-                      <Col sm={6}>
+                      <Col sm={6} xs={6}>
                         <Button
-                          variant="success w-50"
+                          variant="success w-100"
                           onClick={() => postData()}
                         >
-                          <SaveIcon /> บันทึกข้อมูล
+                          <SaveIcon /> บันทึก
                         </Button>
                       </Col>
-                      <Col sm={6}>
+                      <Col sm={6} xs={6}>
                         <Button
                           style={{ float: "right" }}
-                          variant="danger w-50"
+                          variant="danger w-100"
                         >
                           {" "}
                           <CancelIcon /> ยกเลิก
