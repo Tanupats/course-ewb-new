@@ -23,6 +23,7 @@
 }
 
 .nav-item{
+    width: 100%;
     text-decoration: none;
     font-size: 18px;
     background-color: #9f66c7;
@@ -37,8 +38,5 @@ a nav-item{
 }
 .profile{
     margin-top: 30px;
-    width: 100%;
-}
-.nav{
     width: 100%;
 }

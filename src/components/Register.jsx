@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Col, Row, Form, Button, Image, Card, Alert } from "react-bootstrap";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 const Register = () => {
   const navigae = useNavigate();
 
@@ -11,23 +11,39 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  const [emailCheck, setEmailCheck] = useState(null);
   let path = "";
   const uploadProfile = async () => {
-    let formData = new FormData();
-    formData.append("file", file);
-    await fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php`,
-      {
-        method: 'POST',
-        body: formData
-      }
-    )
-      .then(response => response.json())
-      .then((res) => {
-        path = res.path
-      })
+    if (file) {
+      let formData = new FormData();
+      formData.append("file", file);
+      await fetch(`${import.meta.env.VITE_BASE_URL}/file/index.php`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      )
+        .then(response => response.json())
+        .then((res) => {
+          path = res.path
+        })
+    }
   }
 
+  const validateEmail = (email) => {
+    // สร้าง Regular Expression ที่รับเฉพาะภาษาอังกฤษ
+    var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    // ใช้ test() เพื่อตรวจสอบว่าอีเมลผ่าน Regex หรือไม่
+    return regex.test(email);
+  }
+
+  const handleEmail = (val) => {
+    setEmail(val)
+    let validEmail = validateEmail(val)
+    console.log(validEmail)
+    setEmailCheck(validEmail);
+  }
   const handelSubmit = async (e) => {
     e.preventDefault();
     await uploadProfile();
@@ -39,22 +55,18 @@ const Register = () => {
       role: "admin",
       systemName: "course"
     }
-    await fetch(`${import.meta.env.VITE_BASE_URL}/users/index.php`,
-      {
-        method: 'POST',
-        body: JSON.stringify(body)
-      }
+    await axios.post(`${import.meta.env.VITE_BASE_URL}/users/index.php`, body
     )
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           navigae("/login");
         }
+
+
+      }).catch(err => {
+        setErrMsg(err)
       })
-      .catch((err) => {
-        if (err) {
-          setMessage("ผู้ใช้นี้ได้ลงทะเบียนแล้ว");
-        }
-      });
+
   };
 
 
@@ -74,8 +86,8 @@ const Register = () => {
                       <Image
                         src={file ? URL.createObjectURL(file) : "profile.png"}
                         style={{
-                          width: "100px",
-                          height: "100px",
+                          width: "60px",
+                          height: "60px",
                           borderRadius: "50px",
                         }}
                       />
@@ -87,7 +99,7 @@ const Register = () => {
 
                       enctype="multipart/form-data"
                     >
-                      <h4 className="text-center"> ลงทะเบียน</h4>
+                      <h5 className="text-center"> ลงทะเบียน</h5>
 
                       <Form.Group className="mb-4">
                         <Form.Label>อัพโหลดโปรไฟล์</Form.Label>
@@ -97,7 +109,7 @@ const Register = () => {
                         />
                       </Form.Group>
                       <Form.Group className="mb-4">
-                        <Form.Label>ชื่อ-นามสกุล</Form.Label>
+                        <Form.Label>ชื่อ-นามสกุล (ภาษาไทย หรือภาษาอังกฤษ)</Form.Label>
                         <Form.Control
                           type="text"
                           value={name}
@@ -106,6 +118,9 @@ const Register = () => {
                           onChange={(e) => setName(e.target.value)}
                         />
                       </Form.Group>
+                      {
+                        emailCheck === false && (<> <p style={{ color: 'red' }}> *กรุณากรอกอีเมลให้ถูกต้องตามรูปแบบ</p></>)
+                      }
                       <Form.Group className="mb-4">
                         <Form.Label>อีเมล</Form.Label>
                         <Form.Control
@@ -113,7 +128,7 @@ const Register = () => {
                           value={email}
                           placeholder="Email"
                           required
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => handleEmail(e.target.value)}
                         />
                       </Form.Group>
 

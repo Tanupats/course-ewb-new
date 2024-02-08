@@ -22,12 +22,12 @@ const Login = () => {
       };
 
       await
-       axios.post(
+        axios.post(
           `${import.meta.env.VITE_BASE_URL}/login/index.php`,
-        body
+          body
 
         )
-        
+
           .then(res => {
             if (res.data.length > 0) {
 
@@ -71,7 +71,7 @@ const Login = () => {
 
                       onSubmit={handelSubmit}
                     >
-                      <h4 className="text-center"> เข้าสู่ระบบ</h4>
+                      <h5 className="text-center"> เข้าสู่ระบบ</h5>
 
                       <Form.Group className="mb-4">
                         <Form.Label>อีเมล</Form.Label>
@@ -96,12 +96,14 @@ const Login = () => {
                       </Form.Group>
 
                       {
-                        errorMsg !== "" && (
+                        errorMsg !== "" && (<>
+                          <br />
+                          <a href="/resetpassword">ลืมรหัสผ่าน ?</a>
                           <Alert variant="danger" className="mt-4">
                             <div className="text-center">
                               {errorMsg} </div>
                           </Alert>
-                        )
+                        </>)
                       }
                       <Button
                         variant="success"

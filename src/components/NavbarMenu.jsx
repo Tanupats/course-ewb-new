@@ -16,12 +16,13 @@ import Register from "./Register";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
+import ResetPassword from "./Resetpassword";
 const NavbarMenu = () => {
   const { isLogin, setIsLogin } = useContext(AuthData);
 
   const Logout = () => {
     setIsLogin("nologin");
-    localStorage.setItem("auth","nologin")
+    localStorage.setItem("auth", "nologin")
     localStorage.setItem("name", "");
   };
 
@@ -106,6 +107,7 @@ const NavbarMenu = () => {
           <Route path="/education" Component={Education}></Route>
           <Route path="/file-docs" Component={Filedocs}></Route>
           <Route path="/register" Component={Register}></Route>
+          <Route path="/resetpassword" Component={ResetPassword}></Route>
         </Routes>
       </Router>
     </div>

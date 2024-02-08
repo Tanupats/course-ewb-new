@@ -521,7 +521,7 @@ const Education = () => {
               <Col sm={12}>
                 <Form.Group>
                   <Button
-                    style={{ height: '50px', fontSize: '18px' }}
+                    style={{ height: '45px', fontSize: '18px' }}
                     variant="primary"
                     onClick={() => onSelectTable("ข้อมูลที่บันทึกความสอดคล้อง")}
                     className="mt-4"
@@ -529,7 +529,7 @@ const Education = () => {
                     <DatasetIcon />   ข้อมูลความสอดคล้องทั้งหมด
                   </Button>{" "}
                   <Button
-                    style={{ height: '50px', fontSize: '18px' }}
+                    style={{ height: '45px', fontSize: '18px' }}
                     variant="primary"
                     onClick={() => onSelectTable("ข้อมูลความสอดคล้อง")}
                     className="mt-4"
@@ -537,7 +537,7 @@ const Education = () => {
                     <ViewModuleIcon />   หัวข้อความสอดคล้อง
                   </Button>{" "}
                   <Button
-                    style={{ height: '50px', fontSize: '18px' }}
+                    style={{ height: '45px', fontSize: '18px' }}
                     variant="primary"
                     onClick={() => onSelectTable("ข้อมูลกลุ่มความสอดคล้อง")}
                     className="mt-4"

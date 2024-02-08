@@ -430,6 +430,7 @@ const Admin = () => {
           <Col sm={3} id="sidebar-wrapper">
             <Nav className="d-md-block  sidebar">
               <div className="profile text-center  mb-4">
+                
                 <Image
                   style={{
                     width: "60px",
